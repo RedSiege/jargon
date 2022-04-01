@@ -2,7 +2,7 @@ import random
 
 def gen_word_combinations():
     # read in words dictionary
-    with open('google-10000-english-usa-gt5.txt') as dictionary:
+    with open('dictionary.txt') as dictionary:
         words = dictionary.readlines()
 
     # Select random words from dictionary
