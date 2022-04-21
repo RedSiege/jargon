@@ -1,14 +1,22 @@
 import random
+import argparse
+import sys
 
-def gen_word_combinations():
+def gen_word_combinations(dict_file):
     # read in words dictionary
-    with open('dictionary.txt') as dictionary:
-        words = dictionary.readlines()
+    try:
+        with open(dict_file) as dictionary:
+            words = dictionary.readlines()
+    except FileNotFoundError:
+        exit("\n\nThe dictionary you specified does not exist! Please specify a valid file path.\nExiting...\n")
 
     # Select random words from dictionary
     # why is this 257?  It fails at 256
-    random_words = random.sample(words, 257)
-    return random_words
+    try:
+        random_words = random.sample(words, 257)
+        return random_words
+    except ValueError:
+        exit("\n\nThe dictionary file you specified does not contain at least 256 words!\nExiting...\n")
 
 def get_shellcode(input_file):
     file_shellcode = b''
@@ -21,20 +29,48 @@ def get_shellcode(input_file):
             for byte in file_shellcode:
                 binary_code += "\\x" + hex(byte)[2:].zfill(2)
 
-            cs_shellcode = "0" + ",0".join(binary_code.split("\\")[1:])
+            raw_shellcode = "0" + ",0".join(binary_code.split("\\")[1:])
 
-        return(cs_shellcode)
+        return(raw_shellcode)
     
     except FileNotFoundError:
         exit("\n\nThe input file you specified does not exist! Please specify a valid file path.\nExiting...\n")
 
-    
+def main():
+    ### Parse our arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--dictionary", type=str,
+                        help="Dictionary file. Defaults to 'dictionary.txt.'")
+    parser.add_argument("-i", "--input", type=str,
+                        help="File containing raw shellcode.")
+    parser.add_argument("-o", "--output", type=str,
+                        help="Output file. Defaults to 'generated.c.'")
 
-if __name__ == '__main__':
+    args = parser.parse_args()
+    if len(sys.argv) == 1:
+        # No arguments received.  Print help and exit
+        parser.print_help(sys.stderr)
+        sys.exit(0)
+
+    if args.input:
+        input_file = args.input
+    else:
+        input_file = "beacon.bin"
+
+    if args.output:
+        output_file = args.output
+    else:
+        output_file = "generated.c"
+
+    if args.dictionary:
+        dict_file = args.dictionary
+    else:
+        dict_file = "dictionary.txt"
+
     '''
         Build translation table
     '''
-    words = gen_word_combinations()
+    words = gen_word_combinations(dict_file)
     english_array = []
     for i in range(0, 256):
         english_array.append(words.pop(1).strip())
@@ -51,7 +87,7 @@ if __name__ == '__main__':
     '''
         Read and format shellcode
     '''
-    shellcode = get_shellcode('beacon.bin')
+    shellcode = get_shellcode(input_file)
     sc_len = len(shellcode.split(','))
     print('Shellcode length: ', sc_len)
     sc_index = 0
@@ -91,9 +127,13 @@ if __name__ == '__main__':
     '''
         Save the results
     '''
-    with open("generated.c", "w") as outfile:
+    with open(output_file, "w") as outfile:
         outfile.write(translation_table + '\n')
         outfile.write(translated_shellcode + '\n')
         outfile.write(shellcode_var + '\n')
         outfile.write('int sc_len = sizeof(shellcode);\n')
         outfile.write(generated_forloop + '\n')
+
+
+if __name__ == '__main__':
+    main()
