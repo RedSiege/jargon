@@ -72,7 +72,7 @@ if __name__ == '__main__':
     shellcode_var = shellcode_var.replace('XXX', str(sc_index))
 
     generated_forloop = '''
-        printf("Translating shellcode!\n");
+        printf("Translating shellcode!\\n");
         /*
          for loop is defined as such:
           for (int sc_index = 0; sc_index <= # of shelcode bytes; sc_index++)
