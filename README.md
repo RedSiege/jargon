@@ -7,14 +7,14 @@ Definition: special words or expressions that are used by a particular professio
 
 
 ## Background
-Some AV & EDR use entropy analysis to determine if a binary is trustworthy for execution.  If the entropy of a binary is too high, the agent makes a decision the binary is not trustworth for execution. This is, of course, an oversimplified explanation, but it will work for our purposes.
+In order to protect our shellcode loaders, we often use encryption to obfuscate our shellcode.  Encryption increases the entropy of our shellcode loader.  Some AV & EDR use entropy analysis to determine if a binary is trustworthy for execution.  If the entropy of a binary is too high, the agent makes a decision the binary is not trustworth for execution. This is, of course, an oversimplified explanation, but it will work for our purposes.
 
-This project takes raw shellcode and encodes it using a dictionary of words. The dictionary could consist of English words or it could be strings extracted from your favorite system DLL. The only requirement is that the dictionary contains at least 256 unique entries and all characters are valid for string literals in C/C++.
+This project takes raw shellcode and encodes it using a dictionary of words. The dictionary could be a dictionary of English words, the text of a Shakespearean tragedy, or it could be strings extracted from your favorite system DLL. The only requirement is that the dictionary contains at least 256 unique entries and all characters are valid for string literals in C/C++.
 
 _tldr: Use this program to translate shellcode bytes into words for entropy analysis evasion._
 
 ## How it works
-We typically see shellcode represented as hex bytes - 0x00 to 0xff. However, we can also use integers to represent our shellcode. Since our shellcode can only possibly consist of 256 different values, the program reads the dictionary, selects 256 random words, and places them in an array. A word's position in this tranlsation represents its shellcode value. Consider the following example:
+We typically see shellcode represented as hex bytes - 0x00 to 0xff. However, we can also use integers to represent our shellcode. Since our shellcode can only possibly consist of 256 different values, the program reads the dictionary, selects 256 random words, and places them in an array. A word's position in this tranlsation array represents its shellcode value. Consider the following example:
 ```
 unsigned char* translation_table[5] = { "petition","creates","proposal","maintain","winner" };
 ```
