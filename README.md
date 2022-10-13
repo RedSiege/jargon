@@ -27,3 +27,9 @@ const char* translated_shellcode[287] = { "staying","valuation","differences","s
 To use this translated shellcode in our loader, we simply reverse the process.  For each entry in the translated_shellcode array, we search the translation table for that value. The array index of the word is our shellcode byte. Given the first 4 bytes of 64-bit shellcode are typically `0xfc,0x48,0x83,0xe4,` we can surmise that `"staying","valuation","differences","score"` translates to translation_table[252], translation_table[72], translation_table[131], translation_table[228]. As a result, the first 4 bytes of our reconstructed shellcode will be `252,72,131,228.`
 
 This program will generate C source code containing the two array definitions and the translation routine to recover the shellcode bytes.
+
+## Prior art
+Before I wrote this tool, I tried to find examples that people had written before me.  I came up short, despite a lot of searching.  Since originally writing the tool, I became aware of people who have written similar tools, but their tools are not public. These projects are using similar concepts:
+
+[https://github.com/moloch--/wire-transfer](wire-transfer): Encode binary files into English text for transfer over HTTP.  
+[https://github.com/BishopFox/sliver/blob/master/util/encoders/english.go](Sliver C2): Encode binary file as English text.  
