@@ -94,19 +94,8 @@ def main():
 
 
     '''
-        Translate shellcode
+        Translate shellcode using list comprehension
     '''
-    '''
-    translated_shellcode = 'const char* translated_shellcode[XXX] = { '
-    for byte in shellcode.split(','):
-        #print(int(byte, 16))
-       translated_shellcode = translated_shellcode + '"' + english_array[int(byte, 16)] + '",'
-       sc_index = sc_index + 1  
-
-    translated_shellcode = translated_shellcode.strip(',\'') + ' };\n'
-    translated_shellcode = translated_shellcode.replace('XXX', str(sc_index))
-    '''
-
     translated_shellcode_gen = ('"{}"'.format(english_array[int(byte, 16)]) for byte in shellcode.split(','))
     translated_shellcode = 'const char* translated_shellcode[XXX] = { ' + ','.join(translated_shellcode_gen)
     translated_shellcode = translated_shellcode.strip(',\'') + ' };\n'
