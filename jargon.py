@@ -90,7 +90,7 @@ def main():
     shellcode = get_shellcode(input_file)
     sc_len = len(shellcode.split(','))
     print('Shellcode length: ', sc_len)
-    sc_index = 0
+    #sc_index = 0
 
 
     '''
@@ -109,9 +109,11 @@ def main():
 
     translated_shellcode_gen = ('"{}"'.format(english_array[int(byte, 16)]) for byte in shellcode.split(','))
     translated_shellcode = 'const char* translated_shellcode[XXX] = { ' + ','.join(translated_shellcode_gen)
+    translated_shellcode = translated_shellcode.strip(',\'') + ' };\n'
+    translated_shellcode = translated_shellcode.replace('XXX', str(sc_len))
     
     shellcode_var = "unsigned char shellcode[XXX];";
-    shellcode_var = shellcode_var.replace('XXX', str(sc_index))
+    shellcode_var = shellcode_var.replace('XXX', str(sc_len))
 
     generated_forloop = '''
         printf("Translating shellcode!\\n");
