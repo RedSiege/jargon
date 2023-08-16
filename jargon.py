@@ -37,10 +37,10 @@ def get_shellcode(input_file):
         exit("\n\nThe input file you specified does not exist! Please specify a valid file path.\nExiting...\n")
 
 def print_xxd_style_array(words, words_per_line,tablename):
-    output = f"unsigned char* {tablename}[XXXX] =" +"{\n"
+    output = f"unsigned const char* {tablename}[XXXX] =" +"{\n"
     for i in range(0, len(words), words_per_line):
         chunk = words[i:i+words_per_line]
-        line = ", ".join([f"'{word}'" for word in chunk])
+        line = ", ".join([f"\"{word}\"" for word in chunk])
         output += f"    {line},\n"
     output += "};\n"
     output = output.replace('XXXX', str(len(words)))
@@ -102,8 +102,14 @@ def main():
     '''
         Translate shellcode using list comprehension
     '''
+    # print(shellcode.split(","))
     translated_shellcode_gen = [english_array[int(byte, 16)] for byte in shellcode.split(',')]
+    # print(translated_shellcode_gen)
     translated_shellcode = print_xxd_style_array(translated_shellcode_gen,4,"translated_shellcode")
+    # translated_shellcode = 'const char* translated_shellcode[XXX] = { ' + ','.join(translated_shellcode_gen)
+    # translated_shellcode = translated_shellcode.strip(',\'') + ' };\n'
+    # translated_shellcode = translated_shellcode.replace('XXX', str(sc_len))
+    
     shellcode_var = "unsigned char shellcode[XXX];";
     shellcode_var = shellcode_var.replace('XXX', str(sc_len))
 
