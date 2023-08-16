@@ -36,6 +36,18 @@ def get_shellcode(input_file):
     except FileNotFoundError:
         exit("\n\nThe input file you specified does not exist! Please specify a valid file path.\nExiting...\n")
 
+def print_xxd_style_array(words, words_per_line,tablename):
+    output = f"const char* {tablename}[XXXX] =" +"{\n"
+    for i in range(0, len(words), words_per_line):
+        chunk = words[i:i+words_per_line]
+        line = ", ".join([f"\"{word}\"" for word in chunk])
+        output += f"    {line},\n"
+    output += "};\n"
+    output = output.replace('XXXX', str(len(words)))
+
+    return output
+
+
 def main():
     ### Parse our arguments
     parser = argparse.ArgumentParser()
@@ -75,14 +87,8 @@ def main():
     for i in range(0, 256):
         english_array.append(words.pop(1).strip())
 
-    tt_index = 0
-    translation_table = 'unsigned char* translation_table[XXX] = { '
-    for word in english_array:
-        translation_table = translation_table + '"' + word + '",'
-        tt_index = tt_index + 1
 
-    translation_table = translation_table.rstrip(', ') + ' };\n'
-    translation_table = translation_table.replace('XXX', str(tt_index))
+    translation_table = print_xxd_style_array(english_array,4,"translation_table")
     
     '''
         Read and format shellcode
@@ -96,10 +102,13 @@ def main():
     '''
         Translate shellcode using list comprehension
     '''
-    translated_shellcode_gen = ('"{}"'.format(english_array[int(byte, 16)]) for byte in shellcode.split(','))
-    translated_shellcode = 'const char* translated_shellcode[XXX] = { ' + ','.join(translated_shellcode_gen)
-    translated_shellcode = translated_shellcode.strip(',\'') + ' };\n'
-    translated_shellcode = translated_shellcode.replace('XXX', str(sc_len))
+    # print(shellcode.split(","))
+    translated_shellcode_gen = [english_array[int(byte, 16)] for byte in shellcode.split(',')]
+    # print(translated_shellcode_gen)
+    translated_shellcode = print_xxd_style_array(translated_shellcode_gen,4,"translated_shellcode")
+    # translated_shellcode = 'const char* translated_shellcode[XXX] = { ' + ','.join(translated_shellcode_gen)
+    # translated_shellcode = translated_shellcode.strip(',\'') + ' };\n'
+    # translated_shellcode = translated_shellcode.replace('XXX', str(sc_len))
     
     shellcode_var = "unsigned char shellcode[XXX];";
     shellcode_var = shellcode_var.replace('XXX', str(sc_len))
