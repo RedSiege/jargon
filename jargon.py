@@ -37,7 +37,7 @@ def get_shellcode(input_file):
         exit("\n\nThe input file you specified does not exist! Please specify a valid file path.\nExiting...\n")
 
 def print_xxd_style_array(words, words_per_line,tablename):
-    output = f"unsigned const char* {tablename}[XXXX] =" +"{\n"
+    output = f"const char* {tablename}[XXXX] =" +"{\n"
     for i in range(0, len(words), words_per_line):
         chunk = words[i:i+words_per_line]
         line = ", ".join([f"\"{word}\"" for word in chunk])
