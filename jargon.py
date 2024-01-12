@@ -97,20 +97,20 @@ def main():
         Translate shellcode using list comprehension
     '''
     translated_shellcode_gen = ('"{}"'.format(english_array[int(byte, 16)]) for byte in shellcode.split(','))
-    translated_shellcode = 'const char* translated_shellcode[XXX] = { ' + ','.join(translated_shellcode_gen)
+    translated_shellcode = 'unsigned char* translated_shellcode[XXX] = { ' + ','.join(translated_shellcode_gen)
     translated_shellcode = translated_shellcode.strip(',\'') + ' };\n'
     translated_shellcode = translated_shellcode.replace('XXX', str(sc_len))
     
-    shellcode_var = "unsigned char shellcode[XXX];";
+    shellcode_var = "unsigned char shellcode[XXX] = {0};";
     shellcode_var = shellcode_var.replace('XXX', str(sc_len))
 
     generated_forloop = '''
         printf("Translating shellcode!\\n");
         /*
          for loop is defined as such:
-          for (int sc_index = 0; sc_index <= # of shelcode bytes; sc_index++)
+          for (int sc_index = 0; sc_index < # of shelcode bytes; sc_index++)
         */
-        for (int sc_index = 0; sc_index <= XXX; sc_index++) {
+        for (int sc_index = 0; sc_index < XXX; sc_index++) {
                 for (int tt_index = 0; tt_index <= 255; tt_index++) {
                         if (translation_table[tt_index] == translated_shellcode[sc_index]) {
                                 shellcode[sc_index] = tt_index;
