@@ -112,7 +112,8 @@ def main():
         */
         for (int sc_index = 0; sc_index < XXX; sc_index++) {
                 for (int tt_index = 0; tt_index <= 255; tt_index++) {
-                        if (translation_table[tt_index] == translated_shellcode[sc_index]) {
+                        //if (translation_table[tt_index] == translated_shellcode[sc_index]) {
+                        if (strcmp(translation_table[tt_index], translated_shellcode[sc_index]) == 0) {
                                 shellcode[sc_index] = tt_index;
                                 break;
                         }
