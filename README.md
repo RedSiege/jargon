@@ -37,5 +37,5 @@ This program will generate C source code containing the two array definitions an
 ## Prior art
 Before I wrote this tool, I tried to find examples that people had written before me.  I came up short, despite a lot of searching.  Since originally writing the tool, I became aware of people who have written similar tools, but their tools are not public. These projects are using similar concepts:
 
-[https://github.com/moloch--/wire-transfer](wire-transfer): Encode binary files into English text for transfer over HTTP.  
-[https://github.com/BishopFox/sliver/blob/master/util/encoders/english.go](Sliver C2): Encode binary file as English text.  
+[wire-transfer](https://github.com/moloch--/wire-transfer): Encode binary files into English text for transfer over HTTP.  
+[Sliver C2](https://github.com/BishopFox/sliver/blob/master/util/encoders/english.go): Encode binary file as English text.  
