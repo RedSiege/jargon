@@ -2,7 +2,7 @@ import random
 import argparse
 import sys
 
-def gen_word_combinations(dict_file):
+def gen_word_combinations(dict_file, verbose=False):
     # read in words dictionary
     try:
         with open(dict_file) as dictionary:
@@ -34,7 +34,10 @@ def gen_word_combinations(dict_file):
         # if it made it here, the list is good
         break
 
-    print(random_words)
+    if verbose:
+        print("Selected dictionary words:")
+        print("".join(random_words))
+    
     return random_words
 
 def get_shellcode(input_file):
@@ -64,6 +67,8 @@ def main():
                         help="File containing raw shellcode.")
     parser.add_argument("-o", "--output", type=str,
                         help="Output file. Defaults to 'generated.c.'")
+    parser.add_argument("-v", "--verbose", action='store_true',
+                        help="Verbose output (shows wordlist)")
 
     args = parser.parse_args()
     if len(sys.argv) == 1:
@@ -86,10 +91,15 @@ def main():
     else:
         dict_file = "dictionary.txt"
 
+    if (args.verbose):
+        print("Input file:  "+ input_file)
+        print("Output file: "+ output_file)
+        print("Dictionary:  "+ dict_file)
+
     '''
         Build translation table
     '''
-    words = gen_word_combinations(dict_file)
+    words = gen_word_combinations(dict_file, args.verbose)
     english_array = []
     for i in range(0, 256):
         english_array.append(words.pop(0).strip())
@@ -152,6 +162,8 @@ def main():
         outfile.write(shellcode_var + '\n')
         outfile.write('int sc_len = sizeof(shellcode);\n')
         outfile.write(generated_forloop + '\n')
+
+    print("Output saved to: " + output_file)
 
 
 if __name__ == '__main__':
