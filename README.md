@@ -10,7 +10,7 @@ Definition: special words or expressions that are used by a particular professio
 python3 jargon.py -i input.bin -d /path/to/dictionary.txt -o output.c
 ```
 ## Instructions
-Jargon takes raw shellcode bytes (output format Raw in Cobalt Strike) as input. It also requires a dictionary file containing unique words, one per line, as input. **_The input file must be deduplicated_**. If your dictionary contains duplicate words, Jargon may select the same word for two different shellcode values, resulting in a broken loader.
+Jargon takes raw shellcode bytes (output format Raw in Cobalt Strike) as input. It also requires a dictionary file containing unique words, one per line, as input.
 
 ## Background
 In order to protect our shellcode loaders, we often use encryption to obfuscate our shellcode.  Encryption increases the entropy of our shellcode loader.  Some AV & EDR use entropy analysis to determine if a binary is trustworthy for execution.  If the entropy of a binary is too high, the agent makes a decision the binary is not trustworth for execution. This is, of course, an oversimplified explanation, but it will work for our purposes.
