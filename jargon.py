@@ -10,13 +10,32 @@ def gen_word_combinations(dict_file):
     except FileNotFoundError:
         exit("\n\nThe dictionary you specified does not exist! Please specify a valid file path.\nExiting...\n")
 
-    # Select random words from dictionary
-    # why is this 257?  It fails at 256
-    try:
-        random_words = random.sample(words, 257)
-        return random_words
-    except ValueError:
+    if len(words) < 256:
         exit("\n\nThe dictionary file you specified does not contain at least 256 words!\nExiting...\n")
+
+    while True:
+        # Select random words from dictionary
+        random_words = random.sample(words, 256)
+
+        # check for duplictes
+        dups = []
+        dedup_attempts = 0
+        max_dedup_attempts = 5
+
+        for word in random_words:
+            if word in dups:
+                dedup_attempts += 1
+                print("Duplicates found in randomly selected dictionary. Attempt: " + str(dedup_attempts) + ". Trying again...")
+                if dedup_attempts >= max_dedup_attempts:
+                    exit("\n\nCannot get a deduplicated list!\nExiting...\n")
+            else:
+                dups.append(word)
+
+        # if it made it here, the list is good
+        break
+
+    print(random_words)
+    return random_words
 
 def get_shellcode(input_file):
     file_shellcode = b''
@@ -73,7 +92,7 @@ def main():
     words = gen_word_combinations(dict_file)
     english_array = []
     for i in range(0, 256):
-        english_array.append(words.pop(1).strip())
+        english_array.append(words.pop(0).strip())
 
     tt_index = 0
     translation_table = 'unsigned char* translation_table[XXX] = { '
