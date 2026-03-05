@@ -10,31 +10,18 @@ def gen_word_combinations(dict_file, verbose=False):
     except FileNotFoundError:
         exit("\n\nThe dictionary you specified does not exist! Please specify a valid file path.\nExiting...\n")
 
+    # deduplicate dictionary
+    words = list(dict.fromkeys(words))
+
     if len(words) < 256:
-        exit("\n\nThe dictionary file you specified does not contain at least 256 words!\nExiting...\n")
+        print("The supplied dictionary contains only", len(words), "unique words after deduplication!")
+        exit("Exiting!\n")
 
-    while True:
-        # Select random words from dictionary
-        random_words = random.sample(words, 256)
-
-        # check for duplictes
-        dups = []
-        dedup_attempts = 0
-        max_dedup_attempts = 5
-
-        for word in random_words:
-            if word in dups:
-                dedup_attempts += 1
-                print("Duplicates found in randomly selected dictionary. Attempt: " + str(dedup_attempts) + ". Trying again...")
-                if dedup_attempts >= max_dedup_attempts:
-                    exit("\n\nCannot get a deduplicated list!\nExiting...\n")
-            else:
-                dups.append(word)
-
-        # if it made it here, the list is good
-        break
+    # Select random words from dictionary
+    random_words = random.sample(words, 256)
 
     if verbose:
+        print("Length of dictionary after deduplication: ", len(words))
         print("Selected dictionary words:")
         print("".join(random_words))
     
